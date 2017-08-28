@@ -43,16 +43,15 @@ tempest还是提供了一些稳定的API接口可供使用：
 	tempest.test_plugins =
     plugin_name = module.path:PluginClass
 
-**Standalone Plugin vs In-repo Plugin**
+**独立插件vs在项目中内嵌的插件**
 
-Since all that's required for a plugin to be detected by tempest is a valid setuptools entry point in the proper namespace there is no difference from the tempest perspective on either creating a separate python package to house the plugin or adding the code to an existing python project. However, there are tradeoffs to consider when deciding which approach to take when creating a new plugin.
+一旦一个插件的所有的参数和入口被配置好之后，在tempest的角度来看，将代码放到一个单独的插件中，或者说将插件内嵌到一个项目中，再将代码放入其中，是没有什么不同的。但是在考虑采用何种方法来创建一个插件的时候需要折中考虑。
 
-If you create a separate python project for your plugin this makes a lot of things much easier. Firstly it makes packaging and versioning much simpler, you can easily decouple the requirements for the plugin from the requirements for the other project. It lets you version the plugin independently and maintain a single version of the test code across project release boundaries (see the Branchless Tempest Spec for more details on this). It also greatly simplifies the install time story for external users. Instead of having to install the right version of a project in the same python namespace as tempest they simply need to pip install the plugin in that namespace. It also means that users don't have to worry about inadvertently installing a tempest plugin when they install another package.
+如果将插件作为一个单独的python项目来对待，一切将会变得十分简单。首先这对于打包和版本控制来说变得非常简单，可以非常简单的将项目所需的第三方包和插件所需的第三方包进行解耦。使得你可以将测试插件的代码耽误进行版本控制。对于外部用户来说，安装也变得十分简单，可以将插件单独安装到其namespace中去。再也不用担心在安装其他包的时候安装tempest plugin了。
 
-The sole advantage to integrating a plugin into an existing python project is that it enables you to land code changes at the same time you land test changes in the plugin. This reduces some of the burden on contributors by not having to land 2 changes to add a new API feature and then test it and doing it as a single combined commit.
+将插件集成到项目中去的唯一的好处就是项目的代码改变的时候，加载项目代码的时候同时也加载了插件的测试代码。当添加一个新的API功能的时候，减轻了贡献者的责任，因为他们不需要去改变两处代码了。
 
-
-## Plugin Class ##
+## 插件类 ##
 
 为了提供tempest所需要的参数和让tempest来运行你的插件，需要创建一个plugin class，当tempest需要的时候加载和调用它。为了使得这一过程简化，tempest提供了一个抽象类来充当你创建的class的父类。使用方法如下：
 
@@ -152,14 +151,15 @@ Example implementation with two service clients:
     params_foo2.update(foo2_config)
     return [params_foo1, params_foo2]
 
- load_tests()[source]¶
+**load_tests()[source]**
 
 Return the information necessary to load the tests in the plugin.
-Returns:	a tuple with the first value being the
-test_dir and the second being the top_level
+
+Returns:	a tuple with the first value being the test_dir and the second being the top_level
+
 Return type:	tuple
 
-register_opts(conf)[source]¶
+**register_opts(conf)[source]**
 
 Add additional configuration options to tempest.
 
@@ -223,11 +223,11 @@ services: 插件中client存放的位置
 
 除此之外，在编写测试的时候，需要遵守code review规范，以使得你的测试能够很好的run起来。
 
-**Dealing with configuration options**
+**对配置参数的处理**
 
-Historically Tempest didn't provide external guarantees on its configuration options. However, with the introduction of the plugin interface this is no longer the case. An external plugin can rely on using any configuration option coming from Tempest, there will be at least a full deprecation cycle for any option before it's removed. However, just the options provided by Tempest may not be sufficient for the plugin. If you need to add any plugin specific configuration options you should use the register_opts and get_opt_lists methods to pass them to Tempest when the plugin is loaded. When adding configuration options the register_opts method gets passed the CONF object from tempest. This enables the plugin to add options to both existing sections and also create new configuration sections for new options.
+历史原因，tempest以前不允许外部扩展配置参数的。但是随着插件接口的引入，这已经不是一个问题了。一个外部的插件可以依赖tempest中的所有配置项参数。但是只是tempest本身的配置参数难以满足插件的所有需求。如果你想加一些插件特定的参数，你需要使用register_opt和get_opt_lists这两个方法来将你的参数传入tempest，这样在插件被加载的时候参数也会被加载进去。当添加参数的时候，方法register_opts得到从tempest中传来的参数，这样使得插件为已经存在的部分添加参数，也可以为新的选择设置参数部分。
 
-**Service Clients**
+**服务客户端**
 
 如果在一个插件中你定义了一个service client，非常建议你实现plugin class中的get_service_clients方法。通过该API暴露出去的client都会被自动配置，并且可以被所有的service client class（定义在tempest.lib.services.clients.ServiceClients）的实例使用。万一注册了多个plugin，所有的service client都会被注册。下面给出get_service_client方法的实现例子：
 
@@ -288,7 +288,7 @@ Second the configuration options group service_config must contain the following
 6. build_interval: default to compute.build_interval
 
 
-Third the service client classes should inherit from RestClient, should accept generic keyword arguments, and should pass those arguments to the __init__ method of RestClient. Extra arguments can be added. For instance:
+第三，服务客户端的class必须继承自RestClient，接收一些常规的字典参数，将这些参数传入只RestClient的__init__方法中。额外的参数也可以被添加。比如：
 
     class MyAPIClient(rest_client.RestClient):
 
@@ -300,9 +300,7 @@ Third the service client classes should inherit from RestClient, should accept g
      self.my_args2 = my_arg
 
 
-Finally the service client should be structured in a python module, so that all service client classes are importable from it. Each major API version should have its own module.
-
-The following folder and module structure is recommended for a single major API version:
+最后，服务客户端必须是一个python模块，这样所有其他的服务客户端可以import他。每一个主要版本的API都应当有各自的模块。下面举了一个单独主要版本的例子：
 
     plugin_dir/
   	services/
@@ -339,7 +337,7 @@ The content each of __init__.py module under vN should be:
 
 ## Using Plugins ##
 
-Tempest will automatically discover any installed plugins when it is run. So by just installing the python packages which contain your plugin you'll be using them with tempest, nothing else is really required.
+Tempest在运行的时候会自动发现已经安装的插件。所以，通过安装带插件的python包，你就可以使用tempest来运行它们，其他的任何东西都不需要。
 
 However, you should take care when installing plugins. By their very nature there are no guarantees when running tempest with plugins enabled about the quality of the plugin. Additionally, while there is no limitation on running with multiple plugins it's worth noting that poorly written plugins might not properly isolate their tests which could cause unexpected cross interactions between plugins.
 
