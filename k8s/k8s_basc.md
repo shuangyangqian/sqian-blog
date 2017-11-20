@@ -28,11 +28,7 @@ Pod是Kubernetes最基本的操作单元，包含一个或多个紧密相关的�
 
 同一个Pod里的容器之间仅需通过localhost就能互相通信。
 
-<<<<<<< HEAD
 ![Alt text](/home/qsyqian/Pictures/选区_031.png)
-=======
-![Alt text](http://ozp4u2hgy.bkt.clouddn.com/17-11-20/18469286.jpg)
->>>>>>> d224a2d70852e4993b6a7897a0c0c2eb207f96b1
 
 一个Pod中的应用容器共享同一组资源：
 
