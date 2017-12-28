@@ -1,0 +1,41 @@
+DEBUG (connectionpool:401) "POST /v2.1/9930928f99994b55ad25becd7dd9008f/os-aggregates/169/action HTTP/1.1" 500 198
+DEBUG (session:366) RESP: [500] Openstack-Api-Version: compute 2.37 X-Openstack-Nova-Api-Version: 2.37 Vary: OpenStack-API-Version, X-OpenStack-Nova-API-Version Content-Type: application/json; charset=UTF-8 Content-Length: 198 X-Compute-Request-Id: req-df87aa82-dac9-4081-8bea-005f25db1dd9 Date: Thu, 21 Dec 2017 02:46:51 GMT Connection: keep-alive
+RESP BODY: {"computeFault": {"message": "Unexpected API Error. Please report this at http://bugs.launchpad.net/nova/ and attach the Nova API log if possible.\n<type 'exceptions.AttributeError'>", "code": 500}}
+
+DEBUG (client:85) POST call to compute for http://172.16.100.208:8774/v2.1/9930928f99994b55ad25becd7dd9008f/os-aggregates/169/action used request id req-df87aa82-dac9-4081-8bea-005f25db1dd9
+DEBUG (shell:984) Unexpected API Error. Please report this at http://bugs.launchpad.net/nova/ and attach the Nova API log if possible.
+<type 'exceptions.AttributeError'> (HTTP 500) (Request-ID: req-df87aa82-dac9-4081-8bea-005f25db1dd9)
+Traceback (most recent call last):
+  File "/usr/lib/python2.7/site-packages/novaclient/shell.py", line 982, in main
+  File "/usr/lib/python2.7/site-packages/novaclient/shell.py", line 909, in main
+  File "/usr/lib/python2.7/site-packages/novaclient/v2/shell.py", line 3825, in do_aggregate_add_host
+    aggregate = cs.aggregates.add_host(aggregate.id, args.host)
+  File "/usr/lib/python2.7/site-packages/novaclient/v2/aggregates.py", line 84, in add_host
+  File "/usr/lib/python2.7/site-packages/novaclient/base.py", line 356, in _create
+  File "/usr/lib/python2.7/site-packages/keystoneauth1/adapter.py", line 193, in post
+    return self.request(url, 'POST', **kwargs)
+  File "/usr/lib/python2.7/site-packages/novaclient/client.py", line 117, in request
+ClientException: Unexpected API Error. Please report this at http://bugs.launchpad.net/nova/ and attach the Nova API log if possible.
+<type 'exceptions.AttributeError'> (HTTP 500) (Request-ID: req-df87aa82-dac9-4081-8bea-005f25db1dd9)
+ERROR (ClientException): Unexpected API Error. Please report this at http://bugs.launchpad.net/nova/ and attach the Nova API log if possible.
+<type 'exceptions.AttributeError'> (HTTP 500) (Request-ID: req-df87aa82-dac9-4081-8bea-005f25db1dd9)
+
+
+
+DEBUG (connectionpool:401) "POST /v2.1/9930928f99994b55ad25becd7dd9008f/os-aggregates/169/action HTTP/1.1" 200 270
+DEBUG (session:366) RESP: [200] Content-Length: 270 Content-Type: application/json Openstack-Api-Version: compute 2.37 X-Openstack-Nova-Api-Version: 2.37 Vary: OpenStack-API-Version, X-OpenStack-Nova-API-Version X-Compute-Request-Id: req-ba52ff4f-1dd1-4de2-8a97-5dfdd33547e1 Date: Thu, 21 Dec 2017 02:52:39 GMT Connection: keep-alive
+RESP BODY: {"aggregate": {"name": "sqian", "availability_zone": null, "deleted": false, "created_at": "2017-12-18T07:31:04.000000", "updated_at": null, "hosts": ["ironic.compute.domain.tld", "node-4.domain.tld", "node-3.domain.tld"], "deleted_at": null, "id": 169, "metadata": {}}}
+
+DEBUG (client:85) POST call to compute for http://172.16.100.208:8774/v2.1/9930928f99994b55ad25becd7dd9008f/os-aggregates/169/action used request id req-ba52ff4f-1dd1-4de2-8a97-5dfdd33547e1
+Host node-3.domain.tld has been successfully added for aggregate 169
++-----+-------+-------------------+-----------------------------------------------------------------------+----------+
+| Id  | Name  | Availability Zone | Hosts                                                                 | Metadata |
++-----+-------+-------------------+-----------------------------------------------------------------------+----------+
+| 169 | sqian | -                 | 'ironic.compute.domain.tld', 'node-4.domain.tld', 'node-3.domain.tld' |          |
++-----+-------+-------------------+-----------------------------------------------------------------------+----------+
+
+
+
+除了这些从别的组件中引入的  只要是配置项  都必须再nova/conf/***下面的代码中定义
+定义的有默认值和help注释信息
+如果对这些默认值不满意 可以安装完成之后手动修改  也可以使用puppet这类的工具再安装的时候自动修改

@@ -41,9 +41,18 @@ Helm的工作原理
 
 * Release:chart的部署实例,每个chart可以部署一个或多个release.
 
+![Alt text](/home/qsyqian/txt.folder/blog/images/k8s/选区_035.png)
+
 ### helm客户端
 
 helm客户端是一个命令行工具，负责管理charts、reprepository和release。它通过gPRC API（使用`kubectl port-forward`将tiller的端口映射到本地，然后再通过映射后的端口跟tiller通信）向tiller发送请求，并由tiller来管理对应的Kubernetes资源。
+
+**安装:**
+
+* 下载源码压缩包:  https://github.com/kubernetes/helm/releases
+* 解压缩(`tar -zxvf helm-v2.0.0-linux-amd64.tgz`)
+* 找到对应的二进制文件,然后执行 `mv linux-amd64/helm /usr/local/bin/helm`
+然后就可以使用 `helm help`
 
 ### tiller服务端
 
@@ -159,3 +168,6 @@ Chart的模板基于Go remplate和Sprig,比如:
     command: "$HELM_PLUGIN_DIR/keybase.sh"
 
 这样，就可以用helm keybase命令来使用这个插件。
+
+
+tpl
