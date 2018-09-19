@@ -44,7 +44,8 @@ Etcd 主要提供以下能力，已经熟悉 Etcd 的读者可以略过本段。
 
 Etcd 实现raft的时候，充分利用了go语言CSP并发模型和chan的魔法，想更进行一步了解的可以去看源码，这里只简单分析下它的wal日志。
 
-![](https://github.com/shuangyangqian/sqian-blog/blob/master/images/etcd/etcd%E6%9E%B6%E6%9E%84%E4%B8%8E%E5%AE%9E%E7%8E%B0%EF%BC%881%EF%BC%89.png)
+![](images/etcd架构与实现（1）.png?raw=true)
+
 
 wal日志是二进制的，解析出来后是以上数据结构LogEntry。其中第一个字段type，只有两种，一种是0表示Normal，1表示ConfChange（ConfChange表示 Etcd 本身的配置变更同步，比如有新的节点加入等）。第二个字段是term，每个term代表一个主节点的任期，每次主节点变更term就会变化。第三个字段是index，这个序号是严格有序递增的，代表变更序号。第四个字段是二进制的data，将raft request对象的pb结构整个保存下。Etcd 源码下有个tools/etcd-dump-logs，可以将wal日志dump成文本查看，可以协助分析raft协议。
 
@@ -56,7 +57,8 @@ Etcd v2 和 v3 本质上是共享同一套 raft 协议代码的两个独立的�
 
 ## Etcd v2 存储，Watch以及过期机制 ##
 
-![](https://github.com/shuangyangqian/sqian-blog/blob/master/images/etcd/etcd%E6%9E%B6%E6%9E%84%E4%B8%8E%E5%AE%9E%E7%8E%B0%EF%BC%882%EF%BC%89.png)
+![](images/etcd架构与实现（2）.png?raw=true)
+
 
 Etcd v2 是个纯内存的实现，并未实时将数据写入到磁盘，持久化机制很简单，就是将store整合序列化成json写入文件。数据在内存中是一个简单的树结构。比如以下数据存储到 Etcd 中的结构就如图所示。
 
@@ -82,7 +84,7 @@ store中有一个全局的currentIndex，每次变更，index会加1.然后每�
 
 ## Etcd v3 存储，Watch以及过期机制 ##
 
-![](https://github.com/shuangyangqian/sqian-blog/blob/master/images/etcd/etcd%E6%9E%B6%E6%9E%84%E4%B8%8E%E5%AE%9E%E7%8E%B0%EF%BC%883%EF%BC%89.png)
+![](images/etcd架构与实现（3）.png?raw=true)
 
 Etcd v3 将watch和store拆开实现，我们先分析下store的实现。
 
