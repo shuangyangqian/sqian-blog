@@ -1,8 +1,8 @@
-#golang内置包学习一-context
+# golang内置包学习一-context
 
 控制并发有两种经典的方式，一种是WaitGroup，另外一种就是Context，今天我就谈谈Context。
 
-##什么是WaitGroup
+## 什么是WaitGroup
 
 WaitGroup以前一般在并发编程的时候会用到，它是一种控制并发的方式，它的这种方式是控制多个goroutine同时完成。
 
@@ -30,7 +30,7 @@ WaitGroup以前一般在并发编程的时候会用到，它是一种控制并�
 
 在实际的业务种，我们可能会有这么一种场景：需要我们主动的通知某一个goroutine结束。比如我们开启一个后台goroutine一直做事情，比如监控，现在不需要了，就需要通知这个监控goroutine结束，不然它会一直跑，就泄漏了。
 
-##chan通知
+## chan通知
 
 我们都知道一个goroutine启动后，我们是无法控制他的，大部分情况是等待它自己结束，那么如果这个goroutine是一个不会自己结束的后台goroutine呢？比如监控等，会一直运行的。
 
@@ -71,7 +71,7 @@ WaitGroup以前一般在并发编程的时候会用到，它是一种控制并�
 
 这种chan+select的方式，是比较优雅的结束一个goroutine的方式，不过这种方式也有局限性，如果有很多goroutine都需要控制结束怎么办呢？如果这些goroutine又衍生了其他更多的goroutine怎么办呢？如果一层层的无穷尽的goroutine呢？这就非常复杂了，即使我们定义很多chan也很难解决这个问题，因为goroutine的关系链就导致了这种场景非常复杂。
 
-##初识Context
+## 初识Context
 
 上面说的这种场景是存在的，比如一个网络请求Request，每个Request都需要开启一个goroutine做一些事情，这些goroutine又可能会开启其他的goroutine。所以我们需要一种可以跟踪goroutine的方案，才可以达到控制他们的目的，这就是Go语言为我们提供的Context，称之为上下文非常贴切，它就是goroutine的上下文。
 
@@ -140,7 +140,7 @@ WaitGroup以前一般在并发编程的时候会用到，它是一种控制并�
 
 示例中启动了3个监控goroutine进行不断的监控，每一个都使用了Context进行跟踪，当我们使用cancel函数通知取消时，这3个goroutine都会被结束。这就是Context的控制能力，它就像一个控制器一样，按下开关后，所有基于这个Context或者衍生的子Context都会收到通知，这时就可以进行清理操作了，最终释放goroutine，这就优雅的解决了goroutine启动后不可控的问题。
 
-###Context接口
+### Context接口
 
 Context的接口定义的比较简洁，我们看下这个接口的方法.
 
@@ -221,7 +221,7 @@ Context接口并不需要我们实现，Go内置已经帮我们实现了2个，�
 
 这就是`emptyCtx`实现Context接口的方法，可以看到，这些方法什么都没做，返回的都是`nil`或者零值。
 
-###Context的继承衍生
+### Context的继承衍生
 
 有了如上的根Context，那么是如何衍生更多的子Context的呢？这就要靠context包为我们提供的`With`系列的函数了。
 
@@ -247,7 +247,7 @@ Context接口并不需要我们实现，Go内置已经帮我们实现了2个，�
 
 这就是取消函数的类型，该函数可以取消一个Context，以及这个节点Context下所有的所有的Context，不管有多少层级。
 
-###WithValue传递元数据
+### WithValue传递元数据
 
 通过Context我们也可以传递一些必须的元数据，这些数据会附加在Context上以供使用。
 
@@ -288,7 +288,7 @@ Context接口并不需要我们实现，Go内置已经帮我们实现了2个，�
 
 记住，使用`WithValue`传值，一般是必须的值，不要什么值都传递。
 
-###Context 使用原则
+### Context 使用原则
 
 - 不要把Context放在结构体中，要以参数的方式传递
 - 以Context作为参数的函数方法，应该把Context作为第一个参数，放在第一位。
