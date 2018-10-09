@@ -25,10 +25,15 @@
 
 - golang系列
 
+	容易搞混的知识点
+
+	1. [golang容易搞混的知识点（一）](https://github.com/shuangyangqian/sqian-blog/blob/master/golang/golang%E5%AE%B9%E6%98%93%E6%90%9E%E6%B7%B7%E7%9A%84%E7%9F%A5%E8%AF%86%E7%82%B9%E6%B1%87%E6%80%BB.md)
+
 	内置包学习
 	
 
 	1. [context包](https://github.com/shuangyangqian/sqian-blog/blob/master/golang/golang%E5%86%85%E7%BD%AE%E5%8C%85%E5%AD%A6%E4%B9%A0%E4%B8%80-context.md)
+	2. [interface](https://github.com/shuangyangqian/sqian-blog/blob/master/golang/golang%E5%86%85%E7%BD%AE%E5%8C%85%E5%AD%A6%E4%B9%A0%E4%BA%8C-interface.md)
 
 	golang实战
 		
