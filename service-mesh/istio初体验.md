@@ -300,8 +300,6 @@
 	prometheus-84bd4b9796-mr4n6                 1/1       Running     0          3m
 	servicegraph-7875b75b4f-ph6lq               1/1       Running     0          3m
 
-### 安装katacoda，是的sample app可以被外部访问
-
 ### istio架构
 
 前面的步骤安装部署了istio的几个关键的部分：
@@ -341,3 +339,5 @@ istio架构如下所示：
 
 ![](images/istio_1?raw=true)
 
+
+（未完待续。。。）
