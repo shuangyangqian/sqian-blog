@@ -50,6 +50,11 @@
 		
 	1. [golang-socket编程](https://github.com/shuangyangqian/sqian-blog/blob/master/golang/golang-socket%E7%BC%96%E7%A8%8B.md)
 
+- python系列
+
+	
+	1. [python面试题汇总 ](https://github.com/shuangyangqian/sqian-blog/blob/master/python/python_interview.md)
+
 - etcd系列
 	
 	
