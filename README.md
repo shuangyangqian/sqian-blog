@@ -13,6 +13,8 @@
 
 - **k8s系列**
 
+	1. [CRD](https://github.com/shuangyangqian/sqian-blog/blob/master/k8s/k8s_crd.md)
+
 - **docker系列**
 
 	
