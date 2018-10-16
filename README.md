@@ -14,6 +14,7 @@
 - **k8s系列**
 
 	1. [CRD](https://github.com/shuangyangqian/sqian-blog/blob/master/k8s/k8s_crd.md)
+	2. [calico入门简介](https://github.com/shuangyangqian/sqian-blog/blob/master/k8s/calico-getting-started.md)
 
 - **docker系列**
 
